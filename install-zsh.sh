@@ -41,6 +41,16 @@ $SUDO apt-get update -y
 $SUDO apt-get install -y zsh git curl
 c_ok "zsh, git, curl installed."
 
+# eza: modern, colourful `ls` replacement. Optional — if apt doesn't carry it
+# (older Ubuntu/Debian), we silently fall back to coloured coreutils `ls`.
+if command -v eza >/dev/null 2>&1; then
+  c_ok "eza already installed."
+elif $SUDO apt-get install -y eza >/dev/null 2>&1; then
+  c_ok "eza installed."
+else
+  c_warn "eza not available via apt — ls aliases will use coreutils 'ls --color'."
+fi
+
 # ---- 2. starship -----------------------------------------------------------
 if command -v starship >/dev/null 2>&1; then
   c_ok "starship already installed ($(starship --version | head -n1))."
@@ -133,6 +143,18 @@ bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
+
+# ---- Listing aliases (eza if present, else coloured coreutils ls) ---------
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --group-directories-first --icons=auto'
+  alias ll='eza -lh --group-directories-first --icons=auto --git'
+  alias la='eza -lah --group-directories-first --icons=auto --git'
+  alias lt='eza --tree --level=2 --group-directories-first --icons=auto'
+else
+  alias ls='ls --color=auto --group-directories-first'
+  alias ll='ls -lh --color=auto --group-directories-first'
+  alias la='ls -lAh --color=auto --group-directories-first'
+fi
 
 # ---- Prompt ---------------------------------------------------------------
 command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
