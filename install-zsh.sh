@@ -144,6 +144,20 @@ bindkey '^[[B' history-substring-search-down
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
+# ---- Key bindings: Home/End/Delete + Ctrl/Alt word jumps ------------------
+# Plain zsh doesn't bind these by default (bash got them from readline).
+bindkey '^[[H'    beginning-of-line     # Home
+bindkey '^[[F'    end-of-line           # End
+bindkey '^[[1~'   beginning-of-line     # Home (alt sequence)
+bindkey '^[[4~'   end-of-line           # End (alt sequence)
+bindkey '^[[3~'   delete-char           # Delete
+bindkey '^[[1;5C' forward-word          # Ctrl+Right
+bindkey '^[[1;5D' backward-word         # Ctrl+Left
+bindkey '^[[1;3C' forward-word          # Alt+Right
+bindkey '^[[1;3D' backward-word         # Alt+Left
+bindkey '^H'      backward-kill-word    # Ctrl+Backspace
+bindkey '^[[3;5~' kill-word             # Ctrl+Delete
+
 # ---- Listing aliases (eza if present, else coloured coreutils ls) ---------
 if command -v eza >/dev/null 2>&1; then
   alias ls='eza --group-directories-first'
